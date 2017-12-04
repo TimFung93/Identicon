@@ -40,28 +40,26 @@ defmodule Identicon do
   end
 
   def filter_odd_squares(%Identicon.Image{grid: grid} = image) do
-    grid = Enum.filter grid, fn({code, _index}) -> 
+    grid = Enum.filter grid, fn({code, _index}) ->
       rem(code, 2) == 0
     end
 
     %Identicon.Image{image | grid: grid}
   end
 
-  def hash_input(input) do 
-    hex = :crypto.hash(:md5, input) 
-    |> :binary.bin_to_list 
+  def hash_input(input) do
+    hex = :crypto.hash(:md5, input)
+    |> :binary.bin_to_list
 
     %Identicon.Image{hex: hex}
   end
 
   def generate_color(%Identicon.Image{hex: [r,g,b | _tail]} = image) do
-     # give me first 3 values but we dont care about the other values
      %Identicon.Image{image | color: {r,g,b}}
-     # create a tuple for the color
   end
 
   def generate_grid(%Identicon.Image{hex: hex} = image) do
-    grid = 
+    grid =
       hex
       |> Enum.chunk(3)
       |> Enum.map(&mirror_row/1)
@@ -71,7 +69,7 @@ defmodule Identicon do
     %Identicon.Image{image | grid: grid}
   end
 
-  def mirror_row(row) do 
+  def mirror_row(row) do
     # [145,46,200] -> [145,46,200,145,46]
     [first, second | _tail] = row
 
